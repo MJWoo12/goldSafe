@@ -1,16 +1,18 @@
 package com.h2net.goldsafe.user;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 public class UserController {
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/insertEntryNumber")
-    public String insertEntryNumber(@RequestParam String name,
-                                    @RequestParam int entryNumber) {
-        return "insert entry number";
+    public ResponseEntity<Void> insertEntryNumber(@RequestBody UserVo userVo) {
+        userService.insertEntryNumber(userVo);
+        return ResponseEntity.ok().build();
     }
 }

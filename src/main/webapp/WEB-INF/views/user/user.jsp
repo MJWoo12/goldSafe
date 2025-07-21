@@ -89,26 +89,34 @@
 
 <script>
     function submitEntry() {
-        const entryName = document.getElementById('entryName').value;
-        const entryNumber = document.getElementById('entryNumber').value;
+        const entryName = document.getElementById('entryName').value.trim();
+        const entryNumber = document.getElementById('entryNumber').value.trim();
+        const length = entryNumber.toString().length;
         const messageBox = document.getElementById('messageBox');
 
-        if (entryNumber.length === 0) {
+        if (entryName.length === 0) {
+            messageBox.textContent = "응모하실 이름을 입력해주세요.";
+            return;
+        }
+
+        if (length === 0) {
             messageBox.textContent = "응모하실 숫자를 입력해주세요.";
+            return;
+        }
+
+        if (length === 4) {
+            messageBox.textContent = "3자리 숫자 이내로 입력해주세요.";
             return;
         }
 
         fetch('/api/insertEntryNumber', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: {
-                'entryName':entryName,
-                'entryNumber':entryNumber
-            }
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ entryName, entryNumber })
         })
             .then(response => response.json())
             .then(data => {
-                messageBox.textContent = data.message;
+                alert("참여완료");
             })
             .catch(err => {
                 messageBox.textContent = "서버 오류가 발생했습니다.";
